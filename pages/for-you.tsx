@@ -4,8 +4,11 @@ import Selected from '@/components/Selected';
 import Suggested from '@/components/Suggested';
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 export default function Foryou() {
+  const user = useSelector((state:any) => state.user)
+  console.log(user)
   return (
     <div>
         <SearchBar />

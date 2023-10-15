@@ -1,10 +1,31 @@
+import { openLoginModal } from "@/Redux/ModalSlice";
+import Accordion from "@/components/Accordion";
+import AuthModal from "@/components/modals/AuthModal";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Payment() {
+  const [activeTab, setActiveTab] = useState(0);
+  const [activeBar, setActiveBar] = useState(0);
   const route = useRouter();
+  const dispatch = useDispatch()
+  const user = useSelector((state:any) => state.user)
+  function handlePayment(){
+    if(user.email === null){
+      dispatch(
+        openLoginModal()
+      )
+      return
+    }
+    if(user.plan === "basic"){
+      console.log("change to stirpe")
+    }
+
+  }
   return (
-    <div className="wrapper wrapper-full">
+    <div className=" wrapper-full">
+      <AuthModal />
       <div className="plan">
         <div className="plan__header--wrapper">
           <div className="plan__header">
@@ -17,7 +38,6 @@ export default function Payment() {
             <figure className="plan__img--mask">
               <img
                 alt="pricing"
-                // srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpricing-top.4d86e93a.png&amp;w=1080&amp;q=75 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpricing-top.4d86e93a.png&amp;w=1920&amp;q=75 2x"
                 src="pricing-top.png"
                 width="860"
                 height="722"
@@ -36,7 +56,7 @@ export default function Payment() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 1024 1024"
                     height="1em"
                     width="1em"
@@ -54,7 +74,7 @@ export default function Payment() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 24 24"
                     height="1em"
                     width="1em"
@@ -75,7 +95,7 @@ export default function Payment() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 640 512"
                     height="1em"
                     width="1em"
@@ -90,20 +110,34 @@ export default function Payment() {
               </div>
             </div>
             <div className="section__title">Choose the plan that fits you</div>
-            <div className="plan__card ">
-              <div className="plan__card--circle"></div>
+            <div
+              className={
+                activeTab === 1 ? `plan__card--active plan__card` : `plan__card`
+              }
+              onClick={() => setActiveTab(1)}
+            >
+              <div className="plan__card--circle ">
+              {activeTab === 1  && <div className="plan__card--dot"></div>}
+              </div>
               <div className="plan__card--content">
                 <div className="plan__card--title">Premium Plus Yearly</div>
                 <div className="plan__card--price">$99.99/year</div>
-                <div className="plan__card--text">7-day free trial included</div>
+                <div className="plan__card--text">
+                  7-day free trial included
+                </div>
               </div>
             </div>
             <div className="plan__card--separator">
               <div className="plan__separator">or</div>
             </div>
-            <div className="plan__card plan__card--active">
+            <div
+              className={
+                activeTab === 0 ? `plan__card--active plan__card` : `plan__card`
+              }
+              onClick={() => setActiveTab(0)}
+            >
               <div className="plan__card--circle">
-                <div className="plan__card--dot"></div>
+                {activeTab === 0  && <div className="plan__card--dot"></div>}
               </div>
               <div className="plan__card--content">
                 <div className="plan__card--title">Premium Monthly</div>
@@ -111,143 +145,22 @@ export default function Payment() {
                 <div className="plan__card--text">No trial included</div>
               </div>
             </div>
-            <div className="plan__card--cta">
+            <div className="plan__card--cta" onClick={handlePayment}>
               <span className="btn--wrapper">
-                <button className="btn w-[300px]">
-                  <span>Start your first month</span>
+                <button className="btn !w-[300px]">
+                  <span>
+                    Start your
+                    {activeTab === 0 ? " first month " : " free 7-day trial"}
+                  </span>
                 </button>
               </span>
               <div className="plan__disclaimer">
-                30-day money back guarantee, no questions asked.
+                {activeTab === 0
+                  ? "30-day money back guarantee, no questions asked."
+                  : "Cancel your trial at any time before it ends, and you won’t be charged."}
               </div>
             </div>
-            <div className="faq__wrapper">
-              <div className="accordion__card">
-                <div className="accordion__header">
-                  <div className="accordion__title">
-                    How does the free 7-day trial work?
-                  </div>
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 16 16"
-                    className="accordion__icon "
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="collapse h-0">
-                  <div className="accordion__body">
-                    Begin your complimentary 7-day trial with a Summarist annual
-                    membership. You are under no obligation to continue your
-                    subscription, and you will only be billed when the trial
-                    period expires. With Premium access, you can learn at your
-                    own pace and as frequently as you desire, and you may
-                    terminate your subscription prior to the conclusion of the
-                    7-day free trial.
-                  </div>
-                </div>
-              </div>
-              <div className="accordion__card">
-                <div className="accordion__header">
-                  <div className="accordion__title">
-                    Can I switch subscriptions from monthly to yearly, or yearly
-                    to monthly?
-                  </div>
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 16 16"
-                    className="accordion__icon "
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="collapse h-0" >
-                  <div className="accordion__body">
-                    While an annual plan is active, it is not feasible to switch
-                    to a monthly plan. However, once the current month ends,
-                    transitioning from a monthly plan to an annual plan is an
-                    option.
-                  </div>
-                </div>
-              </div>
-              <div className="accordion__card">
-                <div className="accordion__header">
-                  <div className="accordion__title">
-                    What's included in the Premium plan?
-                  </div>
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 16 16"
-                    className="accordion__icon "
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="collapse h-0">
-                  <div className="accordion__body">
-                    Premium membership provides you with the ultimate Summarist
-                    experience, including unrestricted entry to many
-                    best-selling books high-quality audio, the ability to
-                    download titles for offline reading, and the option to send
-                    your reads to your Kindle.
-                  </div>
-                </div>
-              </div>
-              <div className="accordion__card">
-                <div className="accordion__header">
-                  <div className="accordion__title">
-                    Can I cancel during my trial or subscription?
-                  </div>
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 16 16"
-                    className="accordion__icon "
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="collapse h-0">
-                  <div className="accordion__body">
-                    You will not be charged if you cancel your trial before its
-                    conclusion. While you will not have complete access to the
-                    entire Summarist library, you can still expand your
-                    knowledge with one curated book per day.
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Accordion />
           </div>
         </div>
         <section id="footer">
@@ -324,7 +237,9 @@ export default function Payment() {
                 </div>
               </div>
               <div className="footer__copyright--wrapper">
-                <div className="footer__copyright">Copyright © 2023 Summarist.</div>
+                <div className="footer__copyright">
+                  Copyright © 2023 Summarist.
+                </div>
               </div>
             </div>
           </div>

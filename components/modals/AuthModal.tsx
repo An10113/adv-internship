@@ -1,96 +1,151 @@
 import { closeLoginModal, openLoginModal } from "@/Redux/ModalSlice";
 import { auth } from "@/firebase";
 import { Modal } from "@mui/material";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BiUser } from "react-icons/bi";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
+import { setUser } from "@/Redux/UserSlice";
 
 export default function AuthModal() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [signup, setSignup] = useState(false);
-    const dispatch = useDispatch();
-    const isOpen = useSelector((state: any) => state.modal.loginModal);
-    const router = useRouter()
-    function handleSignIn() {
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                router.push('/for-you');
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                alert(`Sign-in failed because of ${errorMessage}`)
-            });
-    }
-    function handleGuestSignIn() {
-        signInWithEmailAndPassword(
-            auth,
-            'guest@gmail.com',
-            'guest123'
-        ).then((userCredential) => {
-            const user = userCredential.user;
-            router.push('/for-you');
-        })
-            .catch((error) => {
-                const errorMessage = error.message;
-                alert(`Sign-in failed because of ${errorMessage}`)
-            })
-    }
-    function handleSignUp() {
-        const userCredentials = createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        ).then((userCredential) => {
-            const user = userCredential.user;
-            router.push('/for-you');
-        }).catch((error) => {
-            const errorMessage = error.message;
-            alert(`Sign-up failed because of ${errorMessage}`)
-        });
-    }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signup, setSignup] = useState(false);
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state: any) => state.modal.loginModal);
+  const router = useRouter();
+  const GGprovider = new GoogleAuthProvider();
 
-    return (
-        <>
-            <Modal
-                open={isOpen}
-                onClose={() => dispatch(closeLoginModal())}
-                className="flex justify-center items-center"
-            >
-                <div className="w-[400px] bg-[#fff] relative rounded-lg flex flex-col justify-center ">
-                    <div className="auth__content w-full">
-                        <div className="text-[20px] font-bold text-center text-black mb-6" >{!signup ? "Login" : "Sign up"} to Summarist</div>
-                        {!signup && (
-                            <>
-                                <button className="guest__btn--wrapper relative" onClick={handleGuestSignIn}>
-                                    <div className="absolute left-2 ">
-                                        <BiUser size={28} />
-                                    </div>
-                                    <div>Login as a Guest</div>
-                                </button>
-                                <div className="auth__separator"><span className="auth__separator--text">or</span></div>
-                            </>
-                        )
-                        }
-                        <button className="google__btn--wrapper cursor-not-allowed">
-                            <div>Login with Google</div>
-                        </button>
-                        <div className="auth__separator"><span className="auth__separator--text">or</span></div>
-                        <form className="auth__main--form">
-                            <input onChange={e => setEmail(e.target.value)} className="auth__main--input" type="text" placeholder="Email Address" />
-                            <input onChange={e => setPassword(e.target.value)} className="auth__main--input" type="password" placeholder="Password" />
-                            <button className="btn" onClick={signup ? handleSignUp : handleSignIn}>
-                                <span>{!signup ? "Login" : "Sign up"}</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div className="auth__forgot--password">Forgot your password?</div>
-                    <button className="auth__switch--btn" onClick={() => setSignup(!signup)}>{signup ? "Already have an account?" : "Don't have an account?"}</button>
-                </div>
-            </Modal>
-        </>
+  async function handleGgSignIn() {
+    const result = await signInWithPopup(auth, GGprovider);
+    const user = result.user;
+    if (user) {
+      router.push("/for-you");
+    }
+  }
+
+  function handleSignIn() {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        router.push("/for-you");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(`Sign-in failed because of ${errorMessage}`);
+      });
+  }
+  function handleGuestSignIn() {
+    signInWithEmailAndPassword(auth, "guest@gmail.com", "guest123")
+      .then((userCredential) => {
+        const user = userCredential.user;
+        router.push("/for-you");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(`Sign-in failed because of ${errorMessage}`);
+      });
+  }
+  async function handleSignUp() {
+    const userCredentials = createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
     )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        router.push("/for-you");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(`Sign-up failed because of ${errorMessage}`);
+      });
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) return;
+      dispatch(
+        setUser({
+          email: currentUser.email
+        })
+      );
+    });
+    return unsubscribe;
+  }, []);
+
+  return (
+    <>
+      <Modal
+        open={isOpen}
+        onClose={() => dispatch(closeLoginModal())}
+        className="flex justify-center items-center"
+      >
+        <div className="w-[400px] bg-[#fff] relative rounded-lg flex flex-col justify-center ">
+          <div className="auth__content w-full">
+            <div className="text-[20px] font-bold text-center text-black mb-6">
+              {!signup ? "Login" : "Sign up"} to Summarist
+            </div>
+            {!signup && (
+              <>
+                <button
+                  className="guest__btn--wrapper relative"
+                  onClick={handleGuestSignIn}
+                >
+                  <div className="absolute left-2 ">
+                    <BiUser size={28} />
+                  </div>
+                  <div>Login as a Guest</div>
+                </button>
+                <div className="auth__separator">
+                  <span className="auth__separator--text">or</span>
+                </div>
+              </>
+            )}
+            <button className="google__btn--wrapper" onClick={handleGgSignIn}>
+              <div>Login with Google</div>
+            </button>
+            <div className="auth__separator">
+              <span className="auth__separator--text">or</span>
+            </div>
+            <form className="auth__main--form">
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                className="auth__main--input"
+                type="text"
+                placeholder="Email Address"
+              />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                className="auth__main--input"
+                type="password"
+                placeholder="Password"
+              />
+              <button
+                className="btn"
+                onClick={signup ? handleSignUp : handleSignIn}
+              >
+                <span>{!signup ? "Login" : "Sign up"}</span>
+              </button>
+            </form>
+          </div>
+          <div className="auth__forgot--password">Forgot your password?</div>
+          <button
+            className="auth__switch--btn"
+            onClick={() => setSignup(!signup)}
+          >
+            {signup ? "Already have an account?" : "Don't have an account?"}
+          </button>
+        </div>
+      </Modal>
+    </>
+  );
 }
