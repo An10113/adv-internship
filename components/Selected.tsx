@@ -30,9 +30,19 @@ interface Book {
 //   data: Book
 // }>
 // { id, author,title,subTitle,imageLink,audioLink,totalRating,averageRating,keyIdeas,type,status,subscriptionRequired,summary, tags, bookDescription, authorDescription }
-
+const formatTime = (time: number) => {
+  if (time && !isNaN(time)) {
+    const minutes = Math.floor(time / 60);
+    const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(time % 60);
+    const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${formatMinutes} mins ${formatSeconds} sec`;
+  }
+  return "00:00";
+};
 
 export default function Selected(){
+  const [duration, setDuration] = useState(0);
   const [data, setData] = useState<Book>()
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +53,12 @@ export default function Selected(){
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const audio = new Audio(data?.audioLink)
+    audio.onloadedmetadata = () => {
+      setDuration(audio.duration);
+    }
+}, [data]);
   return (
     <>
       <div className='for-you__wrapper'>
@@ -65,7 +81,7 @@ export default function Selected(){
                 <div className="selected__book--icon">
                   <BsFillPlayCircleFill size={40} />
                 </div>
-                <div className="selected__book--duration"></div>
+                <div className="selected__book--duration">{formatTime(duration)}</div>
               </div>
             </div>
           </div>

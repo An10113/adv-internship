@@ -1,5 +1,7 @@
-import React from 'react'
-import { AiFillStar } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
+import { AiFillStar,AiOutlineClockCircle } from 'react-icons/ai'
+
+// const { getAudioDurationInSeconds } = require('get-audio-duration')
 interface Book {
     id: string
     author: string
@@ -18,8 +20,24 @@ interface Book {
     bookDescription: string
     authorDescription: string
 }
-
-export default function Book({ id, title, author, subTitle, averageRating, imageLink, subscriptionRequired }: Book) {
+const formatTime = (time: number) => {
+    if (time && !isNaN(time)) {
+      const minutes = Math.floor(time / 60);
+      const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const seconds = Math.floor(time % 60);
+      const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${formatMinutes}:${formatSeconds}`;
+    }
+    return "00:00";
+  };
+export default function Book({ id, title, author, audioLink,  subTitle, averageRating, imageLink, subscriptionRequired }: Book) {
+    const [duration, setDuration] = useState(0);
+    useEffect(() => {
+        const audio = new Audio(audioLink)
+        audio.onloadedmetadata = () => {
+          setDuration(audio.duration);
+        }
+  }, []);
     return (
             <a className="for-you__recommended--books-link" href={`/book/${id}`}>
                 {/* <audio src="" alt="book"> */}
@@ -33,9 +51,9 @@ export default function Book({ id, title, author, subTitle, averageRating, image
                 <div className="recommended__book--details-wrapper">
                     <div className="recommended__book--details">
                         <div className="recommended__book--details-icon">
-                            <AiFillStar />
+                            <AiOutlineClockCircle />
                         </div>
-                        <div className="recommended__book--details-text">{`${averageRating}`}</div>
+                        <div className="recommended__book--details-text">{formatTime(duration)}</div>
                         <div className="recommended__book--details-icon">
                             <AiFillStar />
                         </div>

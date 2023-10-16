@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
-  AiFillStar,
+AiFillStar,
   AiOutlineClockCircle,
   AiOutlineStar,
 } from "react-icons/ai";
@@ -28,8 +28,10 @@ interface Book {
   authorDescription: string;
 }
 
+
 export default function Id() {
   const [data, setData] = useState<Book>();
+  const [duration, setDuration] = useState(0);
   const router = useRouter();
   const { id } = router.query;
   
@@ -41,14 +43,29 @@ export default function Id() {
         );
         const json = await response.data;
         setData(json);
+        const audio = new Audio(data?.audioLink)
+        audio.onloadedmetadata = () => {
+          setDuration(audio.duration);
+        }
       };
       fetchData();
     }
-  }, [id]);
+  }, [id,data]);
 
-  function handlePlay(){
-    router.push(`/player/${id}`)
+  function handlePlay() {
+    router.push(`/player/${id}`);
   }
+  const formatTime = (time: number) => {
+    if (time && !isNaN(time)) {
+      const minutes = Math.floor(time / 60);
+      const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const seconds = Math.floor(time % 60);
+      const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${formatMinutes}:${formatSeconds}`;
+    }
+    return "00:00";
+  };
+
   return (
     <>
       <SearchBar />
@@ -75,7 +92,9 @@ export default function Id() {
                     <div className="inner-book__icon w-full h-full">
                       <AiOutlineClockCircle size={24} />
                     </div>
-                    <div className="inner-book__key--ideas">8 Key ideas</div>
+                    <div className="inner-book__key--ideas">
+                      {formatTime(duration)}
+                    </div>
                   </div>
                   <div className="inner-book__description">
                     <div className="inner-book__icon w-full h-full">
@@ -98,7 +117,7 @@ export default function Id() {
                   <div className="inner-book__read--icon">
                     <BsBook />
                   </div>
-                  <div className="inner-book__read--text" >Read</div>
+                  <div className="inner-book__read--text">Read</div>
                 </button>
                 <button className="inner-book__read--btn" onClick={handlePlay}>
                   <div className="inner-book__read--icon">
@@ -119,7 +138,9 @@ export default function Id() {
                 What's it about?
               </div>
               <div className="inner-book__tags--wrapper">
-                {data?.tags.map(tag =><div className="inner-book__tag">{tag}</div> )}
+                {data?.tags.map((tag) => (
+                  <div className="inner-book__tag">{tag}</div>
+                ))}
               </div>
               <div className="inner-book__book--description">
                 {data?.bookDescription}

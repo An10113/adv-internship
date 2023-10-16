@@ -149,10 +149,7 @@ export default function Audio() {
           type="range"
           className="audio__progress--bar"
           ref={progressBarRef}
-          defaultValue="0"
           onChange={handleProgressChange}
-          value="0"
-          max="338.952"
         ></input>
         <audio
           src={data?.audioLink}

@@ -35,7 +35,7 @@ export default function Suggested() {
         <div className="for-you__sub--title">Browse those books</div>
         <div className='for-you__recommended--books'>
 
-        {data ? data.map(data => <Book key={data.id} subscriptionRequired={data.subscriptionRequired} id={data.id} title={data.title} author={data.author} subTitle={data.subTitle} averageRating={data.averageRating} imageLink={data.imageLink} audioLink={''} totalRating={data.totalRating} keyIdeas={data.keyIdeas} type={''} status={''} summary={''} tags={[]} bookDescription={''} authorDescription={''} /> ) : <></>}
+        {data ? data.map(data => <Book key={data.id} subscriptionRequired={data.subscriptionRequired} id={data.id} title={data.title} author={data.author} subTitle={data.subTitle} averageRating={data.averageRating} imageLink={data.imageLink} audioLink={data.audioLink} totalRating={data.totalRating} keyIdeas={data.keyIdeas} type={''} status={''} summary={''} tags={[]} bookDescription={''} authorDescription={''} /> ) : <></>}
         </div>
     </div>
   )

@@ -913,7 +913,7 @@ button:disabled {
   width: 100%;
 }
 .for-you__recommended--books-link:hover{
-  background-color: rgb(32, 186, 104,0.3);
+  background-color: rgba(147, 166, 156, 0.3);
 }
 
 body::-webkit-scrollbar {
