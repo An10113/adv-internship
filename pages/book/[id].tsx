@@ -1,4 +1,6 @@
+import { openLoginModal } from "@/Redux/ModalSlice";
 import SearchBar from "@/components/SearchBar";
+import AuthModal from "@/components/modals/AuthModal";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -8,6 +10,7 @@ AiFillStar,
   AiOutlineStar,
 } from "react-icons/ai";
 import { BsBook, BsBookmark, BsLightbulb, BsMic } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Book {
   id: string;
@@ -51,8 +54,16 @@ export default function Id() {
       fetchData();
     }
   }, [id,data]);
-
-  function handlePlay() {
+  const user = useSelector((state:any) => state.user)
+  const dispatch = useDispatch()
+  function handlePlay(){
+    console.log(user)
+    if(user.email === null){
+      dispatch(
+        openLoginModal()
+      )
+      return
+    }
     router.push(`/player/${id}`);
   }
   const formatTime = (time: number) => {
@@ -69,6 +80,7 @@ export default function Id() {
   return (
     <>
       <SearchBar />
+      <AuthModal />
       <div className="max-w-[1070px] w-full mx-auto px-6">
         <div className="py-6 w-full">
           <div className="inner__wrapper">

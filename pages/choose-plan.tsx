@@ -12,15 +12,14 @@ export default function Payment() {
   const dispatch = useDispatch()
   const user = useSelector((state:any) => state.user)
   function handlePayment(){
+    console.log(user)
     if(user.email === null){
       dispatch(
         openLoginModal()
       )
       return
     }
-    if(user.plan === "basic"){
-      console.log("change to stirpe")
-    }
+    console.log("logged in")
 
   }
   return (

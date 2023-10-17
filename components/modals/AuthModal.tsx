@@ -7,7 +7,6 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  updateProfile,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +28,7 @@ export default function AuthModal() {
     const user = result.user;
     if (user) {
       router.push("/for-you");
+      dispatch(closeLoginModal())
     }
   }
 
@@ -37,6 +37,7 @@ export default function AuthModal() {
       .then((userCredential) => {
         const user = userCredential.user;
         router.push("/for-you");
+        dispatch(closeLoginModal())
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -48,6 +49,7 @@ export default function AuthModal() {
       .then((userCredential) => {
         const user = userCredential.user;
         router.push("/for-you");
+        dispatch(closeLoginModal())
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -63,24 +65,24 @@ export default function AuthModal() {
       .then((userCredential) => {
         const user = userCredential.user;
         router.push("/for-you");
+        dispatch(closeLoginModal())
       })
       .catch((error) => {
         const errorMessage = error.message;
         alert(`Sign-up failed because of ${errorMessage}`);
       });
+
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth,(currentUser) => {
       if (!currentUser) return;
-      dispatch(
-        setUser({
-          email: currentUser.email
-        })
-      );
-    });
-    return unsubscribe;
-  }, []);
+      dispatch(setUser({
+        email: currentUser.email,
+      }))
+  })
+    return unsubscribe
+  },[])
 
   return (
     <>

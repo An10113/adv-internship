@@ -63,7 +63,7 @@ export default function Audio() {
   };
 
   const repeat: any = useCallback(() => {
-    const currentTime:any = audioRef?.current.currentTime;
+    const currentTime: any = audioRef?.current.currentTime;
     setTimeProgress(currentTime);
     progressBarRef.current.value = currentTime;
     progressBarRef.current.style.setProperty(
@@ -77,7 +77,7 @@ export default function Audio() {
     if (isPlaying) {
       audioRef.current.play();
     } else {
-        audioRef.current.pause();
+      audioRef.current.pause();
     }
     playAnimationRef.current = requestAnimationFrame(repeat);
   }, [isPlaying, audioRef, repeat]);
@@ -97,7 +97,7 @@ export default function Audio() {
   const skipForward = () => {
     audioRef.current.currentTime += 10;
   };
-  
+
   const skipBackward = () => {
     audioRef.current.currentTime -= 10;
   };
@@ -109,6 +109,7 @@ export default function Audio() {
       audioRef.current.pause();
     }
   }, [isPlaying, audioRef]);
+
   return (
     <div className="audio__wrapper">
       <audio src={data?.audioLink}></audio>
@@ -129,7 +130,7 @@ export default function Audio() {
       </div>
       <div className="audio__controls--wrapper">
         <div className="audio__controls">
-          <button className="audio__controls--btn"onClick={skipBackward}>
+          <button className="audio__controls--btn" onClick={skipBackward}>
             <IoPlayBackSharp size={24} color="#fff" />
           </button>
           <button

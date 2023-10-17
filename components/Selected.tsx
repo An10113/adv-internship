@@ -2,6 +2,10 @@
 import React, { useEffect, useState } from 'react'
 import { BsFillPlayCircleFill } from "react-icons/bs"
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import AuthModal from './modals/AuthModal'
+import { openLoginModal } from '@/Redux/ModalSlice'
+import { useDispatch, useSelector } from 'react-redux'
 interface Book {
   id: string
   author: string
@@ -44,6 +48,9 @@ const formatTime = (time: number) => {
 export default function Selected(){
   const [duration, setDuration] = useState(0);
   const [data, setData] = useState<Book>()
+  const router = useRouter()
+  const user = useSelector((state:any) => state.user)
+  const dispatch = useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected');
@@ -59,8 +66,21 @@ export default function Selected(){
       setDuration(audio.duration);
     }
 }, [data]);
+
+  function hanldeReading(){
+    console.log(user)
+    if(user.email === null){
+      dispatch(
+        openLoginModal()
+      )
+      return
+    }
+    console.log("logged in")
+    router.push(`/player/${data?.id}`);
+  }
   return (
     <>
+      <AuthModal />
       <div className='for-you__wrapper'>
         <div className="for-you__title">Selected just for you</div>
         <a className="selected__book" href="/book/f9gy1gpai8">
@@ -78,7 +98,7 @@ export default function Selected(){
               <div className="selected__book--title">{data?.title}</div>
               <div className="selected__book--author">{data?.author}</div>
               <div className="selected__book--duration-wrapper">
-                <div className="selected__book--icon">
+                <div className="selected__book--icon" onClick={hanldeReading}>
                   <BsFillPlayCircleFill size={40} />
                 </div>
                 <div className="selected__book--duration">{formatTime(duration)}</div>
