@@ -1,12 +1,13 @@
 import SearchBar from "@/components/SearchBar";
 import SideBar from "@/components/SideBar";
 import React from "react";
-
+import {getPremiumStatus} from "@/checkStatus"
 export default function settings() {
+    getPremiumStatus
   return (
     <div className="wrapper">
     <SearchBar />
-    <SideBar />
+    <SideBar route={3}/>
     <div className="container">
       <div className="row">
         <div className="section__title page__title">Settings</div>

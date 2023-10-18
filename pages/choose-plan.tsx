@@ -1,17 +1,18 @@
 import { openLoginModal } from "@/Redux/ModalSlice";
 import Accordion from "@/components/Accordion";
 import AuthModal from "@/components/modals/AuthModal";
-import { useRouter } from "next/router";
+import { app } from "@/firebase";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getCheckoutUrl } from "@/stripePayment"
+import { useRouter } from "next/navigation";
 
 export default function Payment() {
   const [activeTab, setActiveTab] = useState(0);
-  const [activeBar, setActiveBar] = useState(0);
-  const route = useRouter();
+  const router = useRouter();
   const dispatch = useDispatch()
   const user = useSelector((state:any) => state.user)
-  function handlePayment(){
+  async function handlePayment(){
     console.log(user)
     if(user.email === null){
       dispatch(
@@ -19,8 +20,18 @@ export default function Payment() {
       )
       return
     }
-    console.log("logged in")
-
+    if(activeTab === 1){
+      const priceID = "price_1O2dTcH7AB1Ei3HFTuG6nBic"
+      const getCheckoutURL =await getCheckoutUrl(app, priceID)
+      // console.log(getCheckoutURL)
+      router.push(getCheckoutURL)
+    }
+    else{
+      const priceID = "price_1O2dAnH7AB1Ei3HF4qcTxGOe"
+      const getCheckoutURL =await getCheckoutUrl(app, priceID)
+      // console.log(getCheckoutURL)
+      router.push(getCheckoutURL)
+    }
   }
   return (
     <div className=" wrapper-full">

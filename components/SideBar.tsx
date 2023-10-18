@@ -8,22 +8,23 @@ import AuthModal from "./modals/AuthModal";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { openLoginModal } from "@/Redux/ModalSlice";
+interface route {
+  route: number
+}
 
-export default function SideBar() {
-    const [number, setNumber]= useState<number>()
+export default function SideBar({route}:route){
     const router = useRouter()
     const user = useSelector((state:any) => state.user)
     const dispatch = useDispatch()
-
     function handleSignOut(){
         if(user.email === null){
             dispatch(openLoginModal())
         }
-        auth.signOut()
+        else{
+          auth.signOut()
+          router.reload()
+        }
     }
-    useEffect(() => {
-        router.reload()
-    },[auth])
 
   return (
     <div className="sidebar sidebar--closed">
@@ -33,15 +34,15 @@ export default function SideBar() {
       </div>
       <div className="sidebar__wrapper">
         <div className="sidebar__top">
-          <a className="sidebar__link--wrapper" onClick={() => {setNumber(1), router.push("for-you")}}>
-            <div className={`sidebar__link--line ${number === 1 &&`active--tab`}`}></div>
+          <a className="sidebar__link--wrapper" onClick={() => router.push("for-you")}>
+            <div className={`sidebar__link--line ${route === 1 && `active--tab`}`}></div>
             <div className="sidebar__icon--wrapper">
               <AiOutlineHome />
             </div>
             <div className="sidebar__link--text">For you</div>
           </a>
-          <a className="sidebar__link--wrapper" onClick={() => {setNumber(2), router.push("for-you")}}>
-            <div className={`sidebar__link--line ${number === 2 &&`active--tab`}`}></div>
+          <a className="sidebar__link--wrapper" onClick={() =>  router.push("library")}>
+            <div className={`sidebar__link--line ${route === 2 && `active--tab`}`}></div>
             <div className="sidebar__icon--wrapper">
              <BsBookmark />
             </div>
@@ -63,8 +64,8 @@ export default function SideBar() {
           </div>
         </div>
         <div className="sidebar__bottom">
-          <a className="sidebar__link--wrapper" onClick={() => {setNumber(3), router.push("/settings")}}>
-            <div className={`sidebar__link--line ${number === 3 &&`active--tab`}`}></div>
+          <a className="sidebar__link--wrapper" onClick={() => router.push("/settings")}>
+            <div className={`sidebar__link--line ${route === 3 && `active--tab`}`}></div>
             <div className="sidebar__icon--wrapper">
               <AiOutlineSetting />
             </div>

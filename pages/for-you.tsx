@@ -11,7 +11,7 @@ export default function Foryou() {
   return (
     <div className='wrapper'>
         <SearchBar />
-        <SideBar />
+        <SideBar route={1}/>
         <div className='max-w-[1070px] w-full mx-auto px-6'>
             <div className='py-6 w-full'>
                 <Selected />
