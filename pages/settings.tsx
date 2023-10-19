@@ -1,25 +1,55 @@
 import SearchBar from "@/components/SearchBar";
 import SideBar from "@/components/SideBar";
 import React from "react";
-import {getPremiumStatus} from "@/checkStatus"
+import { getPremiumStatus } from "@/checkStatus";
+import { useDispatch, useSelector } from "react-redux";
+import { openLoginModal } from "@/Redux/ModalSlice";
+import AuthModal from "@/components/modals/AuthModal";
+
 export default function settings() {
-    getPremiumStatus
+  const user = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+  function handleSignIn() {
+    dispatch(openLoginModal());
+  }
+  // getPremiumStatus
   return (
     <div className="wrapper">
-    <SearchBar />
-    <SideBar route={3}/>
-    <div className="container">
-      <div className="row">
-        <div className="section__title page__title">Settings</div>
-        <div className="settings__login--wrapper">
-          <img src="login.png" />
-          <div className="settings__login--text">
-            Log in to your account to see your details.
-          </div>
-          <button className="btn !w-[100px]">Login</button>
+      <AuthModal />
+      <SearchBar />
+      <SideBar route={3} />
+      <div className="container">
+        <div className="row">
+          {!user.email ? (
+            <>
+              <div className="section__title page__title">Settings</div>
+              <div className="settings__login--wrapper">
+                <img src="login.png" />
+                <div className="settings__login--text">
+                  Log in to your account to see your details.
+                </div>
+                <button className="btn !w-[100px]" onClick={handleSignIn}>
+                  Login
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="section__title page__title">Settings</div>
+              <div className="setting__content">
+                <div className="settings__sub--title">
+                  Your Subscription plan
+                </div>
+                <div className="settings__text">premium</div>
+              </div>
+              <div className="setting__content">
+                <div className="settings__sub--title">Email</div>
+                <div className="settings__text">{user.email}</div>
+              </div>
+            </>
+          )}
         </div>
       </div>
-    </div>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export default function SideBar({route}:route){
       <div className="sidebar__logo">
         <img alt="" src={route === 0 || route === 9 ? "../logo.png" : "logo.png"} />
       </div>
-      <div className="sidebar__wrapper">
+      <div className={`sidebar__wrapper ${route === 9 && `sidebar__read`}`}>
         <div className="sidebar__top">
           <a className="sidebar__link--wrapper" onClick={() => router.push("/for-you")}>
             <div className={`sidebar__link--line ${route === 1 && `active--tab`}`}></div>

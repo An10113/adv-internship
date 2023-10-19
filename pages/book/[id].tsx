@@ -2,6 +2,7 @@ import { openLoginModal } from "@/Redux/ModalSlice";
 import SearchBar from "@/components/SearchBar";
 import SideBar from "@/components/SideBar";
 import AuthModal from "@/components/modals/AuthModal";
+import Skeleton from "@/components/ul/Skeleton";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -35,12 +36,14 @@ interface Book {
 
 export default function Id() {
   const [data, setData] = useState<Book>();
+  const [loading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
   const router = useRouter();
   const { id } = router.query;
   
   useEffect(() => {
     if (id) {
+      setLoading(true);
       const fetchData = async () => {
         const response = await axios.get(
           `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`
@@ -51,6 +54,7 @@ export default function Id() {
         audio.onloadedmetadata = () => {
           setDuration(audio.duration);
         }
+        setLoading(false);
       };
       fetchData();
     }
@@ -85,6 +89,57 @@ export default function Id() {
       <AuthModal />
       <div className="max-w-[1070px] w-full mx-auto px-6">
         <div className="py-6 w-full">
+          { !loading ? <>
+            <div className="inner__wrapper">
+            <div className="inner__book">
+              <div className="inner-book__title"><Skeleton width={500} height={50} borderRadius={0}/></div>
+              <div className="inner-book__author"><Skeleton width={200} height={30} borderRadius={0}/></div>
+              <div className="inner-book__sub--title">
+              <Skeleton width={400} height={20} borderRadius={0}/>
+              </div>
+              <div className="inner-book__wrapper">
+                <div className="inner-book__description--wrapper">
+                  <div className="inner-book__description">
+                  <Skeleton width={100} height={20} borderRadius={0}/>
+                  </div>
+                  <div className="inner-book__description">
+                  <Skeleton width={100} height={20} borderRadius={0}/>
+
+                  </div>
+                  <div className="inner-book__description">
+                  <Skeleton width={100} height={20} borderRadius={0}/>
+                  </div>
+                  <div className="inner-book__description">
+                  <Skeleton width={100} height={20} borderRadius={0}/>
+                  </div>
+                </div>
+              </div>
+              <div className="inner-book__read--btn-wrapper">
+              <Skeleton width={120} height={50} borderRadius={0}/>
+              <Skeleton width={120} height={50} borderRadius={0}/>
+              </div>
+              <div className="inner-book__bookmark">
+              <Skeleton width={300} height={30} borderRadius={0}/>
+              </div>
+              <div className="inner-book__secondary--title">
+              <Skeleton width={200} height={30} borderRadius={0}/>
+              </div>
+              <div className="inner-book__tags--wrapper">
+              <Skeleton width={240} height={30} borderRadius={0}/>
+              </div>
+              <div className="inner-book__book--description">
+              <Skeleton width={500} height={200} borderRadius={0}/>
+              </div>
+              <h2 className="inner-book__secondary--title"><Skeleton width={240} height={30} borderRadius={0}/></h2>
+              <div className="inner-book__author--description">
+              <Skeleton width={500} height={200} borderRadius={0}/>
+              </div>
+            </div>
+            <div className="inner-book--img-wrapper">
+            <Skeleton width={300} height={300} borderRadius={0}/>
+            </div>
+          </div>
+          </> :
           <div className="inner__wrapper">
             <div className="inner__book">
               <div className="inner-book__title">{data?.title}</div>
@@ -153,7 +208,7 @@ export default function Id() {
               </div>
               <div className="inner-book__tags--wrapper">
                 {data?.tags.map((tag) => (
-                  <div className="inner-book__tag">{tag}</div>
+                  <div className="inner-book__tag">{tag} </div>
                 ))}
               </div>
               <div className="inner-book__book--description">
@@ -174,6 +229,7 @@ export default function Id() {
               </figure>
             </div>
           </div>
+        }
         </div>
       </div>
     </div>

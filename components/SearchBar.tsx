@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BiSearch } from "react-icons/bi";
 import { FaTimes } from "react-icons/fa";
 import SearchBook from "./ul/SearchBook";
+import Skeleton from "./ul/Skeleton";
 interface Book {
   id: string;
   author: string;
@@ -22,7 +23,7 @@ interface Book {
 }
 export default function SearchBar() {
   const [search, setSearch] = useState<any>("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<Book[]>();
   function handleDelete() {
     if (search.length !== 0) {
@@ -30,20 +31,22 @@ export default function SearchBar() {
     }
   }
   useEffect(() => {
-    if (search === "") {
+    if (!search) {
       return;
-    }
-    // setTimeout(() => {
-      const fetchData = async () => {
-        const response = await fetch(
-          `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${search}`
-        );
-        const json = await response.json();
-        console.log(json);
-        setData(json);
+    } else {
+      setIsLoading(true);
+      setTimeout(() => {
+        const fetchData = async () => {
+          const response = await fetch(
+            `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${search}`
+          );
+          const json = await response.json();
+          setData(json);
+          setIsLoading(false);
+        };
         fetchData();
-      };
-    // }, 0);
+      }, 1000);
+    }
   }, [search]);
   return (
     <div className="search__background">
@@ -67,11 +70,44 @@ export default function SearchBar() {
             </div>
           </div>
         </div>
-        <div className="search__books--wrapper">
-          {data?.map((book) => (
-            <SearchBook />
+        {search &&
+          (!isLoading ? (
+            data?.length !== 0 ? (
+              <div className="search__books--wrapper">
+                {data?.map((data) => (
+                  <SearchBook
+                    key={data.id}
+                    subscriptionRequired={data.subscriptionRequired}
+                    id={data.id}
+                    title={data.title}
+                    author={data.author}
+                    subTitle={data.subTitle}
+                    averageRating={data.averageRating}
+                    imageLink={data.imageLink}
+                    audioLink={data.audioLink}
+                    totalRating={data.totalRating}
+                    keyIdeas={data.keyIdeas}
+                    type={""}
+                    status={""}
+                    summary={""}
+                    tags={[]}
+                    bookDescription={""}
+                    authorDescription={""}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="search__books--wrapper">No books found</div>
+            )
+          ) : (
+            <div className="search__books--wrapper">
+              {new Array(4).fill(0).map((_, index) => (
+                <div className="p-2" key={index}>
+                  <Skeleton width="100%" height={120} borderRadius={0} />
+                </div>
+              ))}
+            </div>
           ))}
-        </div>
       </div>
     </div>
   );

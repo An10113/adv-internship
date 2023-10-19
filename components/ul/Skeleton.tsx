@@ -2,7 +2,7 @@ import React from "react";
 interface skeleton{
     width: string | number,
     height: string | number,
-    borderRadius: string | number
+    borderRadius: number | undefined
 }
 
 const Skeleton = ({ width, height, borderRadius }:skeleton) => {

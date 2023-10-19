@@ -63,14 +63,16 @@ export default function Audio() {
   };
 
   const repeat: any = useCallback(() => {
-    const currentTime: any = audioRef?.current.currentTime;
-    setTimeProgress(currentTime);
-    progressBarRef.current.value = currentTime;
-    progressBarRef.current.style.setProperty(
-      "--range-progress",
-      `${(progressBarRef.current.value / duration) * 100}%`
-    );
-    playAnimationRef.current = requestAnimationFrame(repeat);
+    const currentTime: any = audioRef?.current?.currentTime;
+    if (currentTime !== undefined) {
+      setTimeProgress(currentTime);
+      progressBarRef.current.value = currentTime;
+      progressBarRef.current.style.setProperty(
+        "--range-progress",
+        `${(progressBarRef.current.value / duration) * 100}%`
+      );
+      playAnimationRef.current = requestAnimationFrame(repeat);
+    }
   }, []);
 
   useEffect(() => {
