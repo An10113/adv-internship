@@ -1,5 +1,6 @@
 import Audio from "@/components/Audio";
 import SearchBar from "@/components/SearchBar";
+import SideBar from "@/components/SideBar";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -48,7 +49,8 @@ export default function Id() {
     }
   }, [id]);
   return (
-    <>
+    <div className="wrapper">
+      <SideBar route={9}/>
       <SearchBar />
       <div className="max-w-[1070px] w-full mx-auto px-6">
         <div className="py-6 w-full">
@@ -63,6 +65,6 @@ export default function Id() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -3,12 +3,23 @@ import { AiFillFileText, AiFillAudio, AiFillBulb } from "react-icons/ai"
 import { BsStarFill, BsStarHalf } from "react-icons/bs"
 import { BiCrown } from "react-icons/bi"
 import { RiLeafLine } from "react-icons/ri"
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { openLoginModal } from '@/Redux/ModalSlice'
 import AuthModal from './modals/AuthModal'
-
+import { useRouter } from "next/router";
+import {useEffect} from "react"
 export default function Start() {
     const dispatch = useDispatch();
+    const router = useRouter();
+    const user = useSelector((state:any) => state.user)
+    useEffect(() => {
+        if(user.email === null){
+            return
+        }
+        else{
+            router.push("/for-you")
+        }
+    },[user])
     return (
         <div className='body'>
             <AuthModal />

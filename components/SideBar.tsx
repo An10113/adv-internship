@@ -30,18 +30,18 @@ export default function SideBar({route}:route){
     <div className="sidebar sidebar--closed">
         <AuthModal />
       <div className="sidebar__logo">
-        <img alt="" src="logo.png" />
+        <img alt="" src={route === 0 || route === 9 ? "../logo.png" : "logo.png"} />
       </div>
       <div className="sidebar__wrapper">
         <div className="sidebar__top">
-          <a className="sidebar__link--wrapper" onClick={() => router.push("for-you")}>
+          <a className="sidebar__link--wrapper" onClick={() => router.push("/for-you")}>
             <div className={`sidebar__link--line ${route === 1 && `active--tab`}`}></div>
             <div className="sidebar__icon--wrapper">
               <AiOutlineHome />
             </div>
             <div className="sidebar__link--text">For you</div>
           </a>
-          <a className="sidebar__link--wrapper" onClick={() =>  router.push("library")}>
+          <a className="sidebar__link--wrapper" onClick={() =>  router.push("/library")}>
             <div className={`sidebar__link--line ${route === 2 && `active--tab`}`}></div>
             <div className="sidebar__icon--wrapper">
              <BsBookmark />

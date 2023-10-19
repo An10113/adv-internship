@@ -10,8 +10,7 @@ import {
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BiUser } from "react-icons/bi";
-import { useRouter } from "next/router";
+import { BiUser } from "react-icons/bi"
 import { setUser } from "@/Redux/UserSlice";
 
 export default function AuthModal() {
@@ -20,14 +19,12 @@ export default function AuthModal() {
   const [signup, setSignup] = useState(false);
   const dispatch = useDispatch();
   const isOpen = useSelector((state: any) => state.modal.loginModal);
-  const router = useRouter();
   const GGprovider = new GoogleAuthProvider();
 
   async function handleGgSignIn() {
     const result = await signInWithPopup(auth, GGprovider);
     const user = result.user;
     if (user) {
-      router.push("/for-you");
       dispatch(closeLoginModal())
     }
   }
@@ -36,7 +33,6 @@ export default function AuthModal() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        router.push("/for-you");
         dispatch(closeLoginModal())
       })
       .catch((error) => {
@@ -48,7 +44,6 @@ export default function AuthModal() {
     signInWithEmailAndPassword(auth, "guest@gmail.com", "guest123")
       .then((userCredential) => {
         const user = userCredential.user;
-        router.push("/for-you");
         dispatch(closeLoginModal())
       })
       .catch((error) => {
@@ -64,7 +59,6 @@ export default function AuthModal() {
     )
       .then((userCredential) => {
         const user = userCredential.user;
-        router.push("/for-you");
         dispatch(closeLoginModal())
       })
       .catch((error) => {
