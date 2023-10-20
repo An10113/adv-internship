@@ -1,8 +1,8 @@
 import { openLoginModal } from "@/Redux/ModalSlice";
 import Accordion from "@/components/Accordion";
 import AuthModal from "@/components/modals/AuthModal";
-import { app } from "@/firebase";
-import React, { useState } from "react";
+import { initFirebase } from "@/firebase";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCheckoutUrl } from "@/stripePayment"
 import { useRouter } from "next/navigation";
@@ -12,6 +12,8 @@ export default function Payment() {
   const router = useRouter();
   const dispatch = useDispatch()
   const user = useSelector((state:any) => state.user)
+  const app = initFirebase()
+
   async function handlePayment(){
     console.log(user)
     if(user.email === null){
@@ -21,18 +23,21 @@ export default function Payment() {
       return
     }
     if(activeTab === 1){
-      const priceID = "price_1O2dTcH7AB1Ei3HFTuG6nBic"
-      const getCheckoutURL =await getCheckoutUrl(app, priceID)
-      console.log(getCheckoutURL)
+      const priceID = "price_1O3DYGH7AB1Ei3HFaSl4AaVH"
+      const getCheckoutURL = await getCheckoutUrl(app, priceID)
       router.push(getCheckoutURL)
     }
     else{
-      const priceID = "price_1O2n2kH7AB1Ei3HF1HRCV69z"
-      const getCheckoutURL =await getCheckoutUrl(app, priceID)
-      console.log(getCheckoutURL)
+      const priceID = "price_1O3DW9H7AB1Ei3HFf49LJ9Ny"
+      const getCheckoutURL = await getCheckoutUrl(app, priceID)
       router.push(getCheckoutURL)
     }
   }
+  useEffect(() => {
+    if (user.premium === true) {
+      router.push("/for-you");
+    } 
+  }, [user]);
   return (
     <div className=" wrapper-full">
       <AuthModal />

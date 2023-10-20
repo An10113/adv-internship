@@ -1,13 +1,14 @@
+
 import Recommend from '@/components/Recommend';
 import SearchBar from '@/components/SearchBar';
 import Selected from '@/components/Selected';
 import SideBar from '@/components/SideBar';
 import Suggested from '@/components/Suggested';
-import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 
 
 export default function Foryou() {
+
   return (
     <div className='wrapper'>
         <SearchBar />

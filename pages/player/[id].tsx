@@ -40,8 +40,8 @@ export default function Id() {
   const { id } = router.query;
   useEffect(() => {
     if (id) {
-      setLoading(true);
       const fetchData = async () => {
+        setLoading(true);
         const response = await axios.get(
           `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`
         );

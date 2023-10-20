@@ -1,18 +1,32 @@
 import SearchBar from "@/components/SearchBar";
 import SideBar from "@/components/SideBar";
-import React from "react";
-import { getPremiumStatus } from "@/checkStatus";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openLoginModal } from "@/Redux/ModalSlice";
 import AuthModal from "@/components/modals/AuthModal";
+import { auth, initFirebase } from "@/firebase";
+import { getPremiumStatus } from "@/checkStatus";
+import { useRouter } from "next/router";
 
 export default function settings() {
   const user = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
+  const router = useRouter()
   function handleSignIn() {
     dispatch(openLoginModal());
   }
-  // getPremiumStatus
+  const [isPremium, setIsPremium] = useState(false);
+  const app = initFirebase();
+  useEffect(() => {
+    const checkPremium = async () => {
+      const newPremiumStatus = auth.currentUser
+        ? await getPremiumStatus(app)
+        : false;
+      setIsPremium(newPremiumStatus);
+    };
+    checkPremium();
+  }, [app, auth.currentUser?.uid]);
+
   return (
     <div className="wrapper">
       <AuthModal />
@@ -40,7 +54,16 @@ export default function settings() {
                 <div className="settings__sub--title">
                   Your Subscription plan
                 </div>
-                <div className="settings__text">premium</div>
+                {isPremium ? (
+                  <div className="settings__text">Premium</div>
+                ) : (
+                  <>
+                  <div className="settings__text">Basic</div>
+                  <div className="btn settings__upgrade--btn" onClick={() => router.push("/choose-plan")}>
+                    Upgrade to Premium
+                  </div>
+                  </>
+                )}
               </div>
               <div className="setting__content">
                 <div className="settings__sub--title">Email</div>

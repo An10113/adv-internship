@@ -43,8 +43,8 @@ export default function Id() {
   
   useEffect(() => {
     if (id) {
-      setLoading(true);
       const fetchData = async () => {
+        setLoading(true);
         const response = await axios.get(
           `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`
         );
@@ -58,18 +58,22 @@ export default function Id() {
       };
       fetchData();
     }
-  }, [id,data]);
+  }, [id]);
   const user = useSelector((state:any) => state.user)
   const dispatch = useDispatch()
   function handlePlay(){
-    console.log(user)
     if(user.email === null){
       dispatch(
         openLoginModal()
       )
       return
     }
-    router.push(`/player/${id}`);
+    if(user.premium === true){
+      router.push(`/player/${id}`);
+    }
+    else{
+      router.push("/choose-plan")
+    }
   }
   const formatTime = (time: number) => {
     if (time && !isNaN(time)) {
@@ -89,7 +93,7 @@ export default function Id() {
       <AuthModal />
       <div className="max-w-[1070px] w-full mx-auto px-6">
         <div className="py-6 w-full">
-          { !loading ? <>
+          { loading ? <>
             <div className="inner__wrapper">
             <div className="inner__book">
               <div className="inner-book__title"><Skeleton width={500} height={50} borderRadius={0}/></div>

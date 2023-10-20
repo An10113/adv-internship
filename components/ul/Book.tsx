@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AiFillStar,AiOutlineClockCircle } from 'react-icons/ai'
+import { useSelector } from 'react-redux'
 
 // const { getAudioDurationInSeconds } = require('get-audio-duration')
 interface Book {
@@ -31,6 +32,7 @@ const formatTime = (time: number) => {
     return "00:00";
   };
 export default function Book({ id, title, author, audioLink,  subTitle, averageRating, imageLink, subscriptionRequired }: Book) {
+    const user = useSelector((state: any) => state.user);
     const [duration, setDuration] = useState(0);
     useEffect(() => {
         const audio = new Audio(audioLink)
@@ -38,10 +40,10 @@ export default function Book({ id, title, author, audioLink,  subTitle, averageR
           setDuration(audio.duration);
         }
   }, []);
+
     return (
             <a className="for-you__recommended--books-link" href={`/book/${id}`}>
-                {/* <audio src="" alt="book"> */}
-                {subscriptionRequired && <div className="book__pill book__pill--subscription-required">Premium</div>}
+                {!user.premium && (subscriptionRequired && <div className="book__pill book__pill--subscription-required">Premium</div>)}
                 <figure className="book__image--wrapper mb-2" >
                     <img className="book__image" src={imageLink} alt="book" />
                 </figure>

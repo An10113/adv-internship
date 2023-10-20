@@ -3,11 +3,12 @@ import { AiOutlineHome, AiOutlineQuestionCircle, AiOutlineSearch } from "react-i
 import { BsBookmark, BsPen } from "react-icons/bs";
 import { AiOutlineSetting } from "react-icons/ai";
 import {LuLogOut} from "react-icons/lu"
-import { auth } from "@/firebase";
-import AuthModal from "./modals/AuthModal";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { openLoginModal } from "@/Redux/ModalSlice";
+import { openSideBarModal } from "@/Redux/ModalSlice";
+import { initFirebase } from "@/firebase";
+import { getAuth } from "firebase/auth";
+import SideBarModal from "./modals/SideBarModal";
 interface route {
   route: number
 }
@@ -16,9 +17,12 @@ export default function SideBar({route}:route){
     const router = useRouter()
     const user = useSelector((state:any) => state.user)
     const dispatch = useDispatch()
+    const app = initFirebase()
+    const auth = getAuth(app)
     function handleSignOut(){
+      console.log(user)
         if(user.email === null){
-            dispatch(openLoginModal())
+            dispatch(openSideBarModal())
         }
         else{
           auth.signOut()
@@ -28,7 +32,7 @@ export default function SideBar({route}:route){
 
   return (
     <div className="sidebar sidebar--closed">
-        <AuthModal />
+        <SideBarModal />
       <div className="sidebar__logo">
         <img alt="" src={route === 0 || route === 9 ? "../logo.png" : "logo.png"} />
       </div>

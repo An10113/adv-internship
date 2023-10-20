@@ -6,6 +6,7 @@ import AuthModal from "./modals/AuthModal";
 import { openLoginModal } from "@/Redux/ModalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Skeleton from "./ul/Skeleton";
+import SideBarModal from "./modals/SideBarModal";
 interface Book {
   id: string;
   author: string;
@@ -64,6 +65,7 @@ export default function Selected() {
       setLoading(false);
     };
     fetchData();
+    console.log(user)
   }, []);
   useEffect(() => {
     const audio = new Audio(data?.audioLink);

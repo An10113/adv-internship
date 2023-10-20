@@ -1,4 +1,4 @@
-import { closeLoginModal, openLoginModal } from "@/Redux/ModalSlice";
+import { closeLoginModal, closeSideBarModal } from "@/Redux/ModalSlice";
 import { Modal } from "@mui/material";
 import {
   GoogleAuthProvider,
@@ -7,7 +7,6 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  updateProfile,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,22 +15,22 @@ import { setUser } from "@/Redux/UserSlice";
 import { initFirebase } from "@/firebase";
 import { getPremiumStatus } from "@/checkStatus";
 
-export default function AuthModal() {
+export default function SideBarModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signup, setSignup] = useState(false);
+  const [status, setStatus] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const isOpen = useSelector((state: any) => state.modal.loginModal);
+  const isOpen = useSelector((state: any) => state.modal.SideBarModal);
   const GGprovider = new GoogleAuthProvider();
   const app = initFirebase();
-  const [premium, setPremium] = useState<boolean>()
   const auth = getAuth(app);
   const user = useSelector((state: any) => state.user);
   async function handleGgSignIn() {
     const result = await signInWithPopup(auth, GGprovider);
     const user = result.user;
     if (user) {
-      dispatch(closeLoginModal());
+      dispatch(closeSideBarModal());
     }
   }
 
@@ -79,7 +78,7 @@ export default function AuthModal() {
       dispatch(
         setUser({
           email: currentUser.email,
-          uid: currentUser.uid
+          uid: currentUser.uid,
         })
       );
     });
@@ -102,12 +101,11 @@ export default function AuthModal() {
     checkPremium();
   }, []);
 
-
   return (
     <>
       <Modal
         open={isOpen}
-        onClose={() => dispatch(closeLoginModal())}
+        onClose={() => dispatch(closeSideBarModal())}
         className="flex justify-center items-center"
       >
         <div className="w-[400px] bg-[#fff] relative rounded-lg flex flex-col justify-center ">
