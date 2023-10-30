@@ -20,11 +20,12 @@ export default function AuthModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signup, setSignup] = useState(false);
+  const [changePassword, setchangePassword] = useState<boolean>(false);
   const dispatch = useDispatch();
   const isOpen = useSelector((state: any) => state.modal.loginModal);
   const GGprovider = new GoogleAuthProvider();
   const app = initFirebase();
-  const [premium, setPremium] = useState<boolean>()
+  const [premium, setPremium] = useState<boolean>();
   const auth = getAuth(app);
   const user = useSelector((state: any) => state.user);
   async function handleGgSignIn() {
@@ -79,7 +80,7 @@ export default function AuthModal() {
       dispatch(
         setUser({
           email: currentUser.email,
-          uid: currentUser.uid
+          uid: currentUser.uid,
         })
       );
     });
@@ -91,17 +92,16 @@ export default function AuthModal() {
       const newPremiumStatus = auth.currentUser
         ? await getPremiumStatus(app)
         : false;
-        dispatch(
-            setUser({
-              email: user.email,
-              uid: user.uid,
-              premium: newPremiumStatus
-            })
-          );
+      dispatch(
+        setUser({
+          email: user.email,
+          uid: user.uid,
+          premium: newPremiumStatus,
+        })
+      );
     };
     checkPremium();
   }, []);
-
 
   return (
     <>
@@ -113,7 +113,7 @@ export default function AuthModal() {
         <div className="w-[400px] bg-[#fff] relative rounded-lg flex flex-col justify-center ">
           <div className="auth__content w-full">
             <div className="text-[20px] font-bold text-center text-black mb-6">
-              {!signup ? "Login" : "Sign up"} to Summarist
+              {changePassword ? "Reset your password" : (`${!signup ? "Login" : "Sign up"} to Summarist`)}
             </div>
             {!signup && (
               <>
