@@ -854,7 +854,41 @@ button:disabled {
   scroll-snap-type: mandatory;
   scroll-snap-type: x;
   margin-bottom: 32px;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+.for-you__recommended--books::-webkit-scrollbar {
+  width: 1px; /* Set the width of the scrollbar */
+}
+
+.for-you__recommended--books::-webkit-scrollbar-thumb {
+  background: #515151; /* Set the color of the thumb (scrollbar handle) */
+  border-radius: 5px; /* Add rounded corners to the thumb */
+}
+
+.for-you__recommended--books::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the color of the track (the empty space) */
+  border-radius: 5px; /* Add rounded corners to the track */
+}
+
+.for-you__recommended--books::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Change the thumb color on hover */
+}
+.summary::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.summary::-webkit-scrollbar-thumb {
+  background: #515151; /* Set the color of the thumb (scrollbar handle) */
+  border-radius: 5px; /* Add rounded corners to the thumb */
+}
+
+.summary::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the color of the track (the empty space) */
+  border-radius: 5px; /* Add rounded corners to the track */
+}
+
+.summary::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Change the thumb color on hover */
 }
 
 .for-you__recommended--books-link {

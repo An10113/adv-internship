@@ -68,7 +68,7 @@ export default function Id() {
       )
       return
     }
-    if(user.premium === true){
+    if(user.premium === true || data?.subscriptionRequired !== true){
       router.push(`/player/${id}`);
     }
     else{
@@ -96,10 +96,10 @@ export default function Id() {
           { loading ? <>
             <div className="inner__wrapper">
             <div className="inner__book">
-              <div className="inner-book__title"><Skeleton width={500} height={50} borderRadius={0}/></div>
+              <div className="inner-book__title"><Skeleton width="100%" height={50} borderRadius={0}/></div>
               <div className="inner-book__author"><Skeleton width={200} height={30} borderRadius={0}/></div>
               <div className="inner-book__sub--title">
-              <Skeleton width={400} height={20} borderRadius={0}/>
+              <Skeleton width="100%" height={20} borderRadius={0}/>
               </div>
               <div className="inner-book__wrapper">
                 <div className="inner-book__description--wrapper">
@@ -132,11 +132,11 @@ export default function Id() {
               <Skeleton width={240} height={30} borderRadius={0}/>
               </div>
               <div className="inner-book__book--description">
-              <Skeleton width={500} height={200} borderRadius={0}/>
+              <Skeleton width="100%" height={200} borderRadius={0}/>
               </div>
               <h2 className="inner-book__secondary--title"><Skeleton width={240} height={30} borderRadius={0}/></h2>
               <div className="inner-book__author--description">
-              <Skeleton width={500} height={200} borderRadius={0}/>
+              <Skeleton width="100%" height={200} borderRadius={0}/>
               </div>
             </div>
             <div className="inner-book--img-wrapper">
@@ -144,7 +144,7 @@ export default function Id() {
             </div>
           </div>
           </> :
-          <div className="inner__wrapper">
+          <div className="inner__wrapper" key={data?.id}>
             <div className="inner__book">
               <div className="inner-book__title">{data?.title}</div>
               <div className="inner-book__author">{data?.author}</div>

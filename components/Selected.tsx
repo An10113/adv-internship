@@ -90,7 +90,7 @@ export default function Selected() {
         <div className="for-you__title">Selected just for you</div>
         {loading ? (
           <>
-            <Skeleton width={600} height={220} borderRadius={0} />
+            <Skeleton width="60%" height={220} borderRadius={0} />
           </>
         ) : (
           <a
